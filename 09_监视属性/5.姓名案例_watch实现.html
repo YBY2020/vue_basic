@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>姓名案例_watch实现</title>
+        <!--
+            computed和watch之间的区别：
+            1.computed能完成的功能，watch都可以完成。
+            2.watch能完成的功能，computed不一定能完成，例如：watch可以进行异步操作
+            两个重要的小原则：
+            1.所有被Vue管理的函数，最好写成普通函数，这样this的指向才是vm或组件实例对象
+            2.所有不被Vue管理的函数（定时器的回调函数、ajax的回调函数等、Promise的回调函数），最好写成箭头函数，这样this的指向才是vm或组件实例对象
+        -->
+        <!--引入Vue-->
+            <script type="text/javascript" src="../js/vue.js"></script>
+    </head>
+    <body>
+        <!--准备好一个容器
+        一个小技巧：写属性的时候往下面看一眼，想想你要的数据是什么，就不会出错了
+        -->
+        <div id="root"> 
+         姓：<input type="text" v-model="firstName"><br/><br/>
+         名：<input type="text" v-model="lastName"><br/><br/>
+         全名：<span>{{fullName}}</span><br/><br/>
+        </div>
+     </body>
+
+   <script type="text/javascript">
+        Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+        new Vue({
+            el:'#root',
+            data:{
+                firstName:'张',
+                lastName:'三',
+                fullName:'张-三'
+            },
+        watch:{
+            firstName(val){//val是newValue的简写形式，嫌麻烦可以这样写
+                //计时器一定要写成箭头函数
+                setTimeout(() => {//定时器，让他等一秒钟再执行（异步任务）computed不能开启异步任务，因为它完全靠return获得结果，如果你加了计时器就return计时器了，而这里是靠我们自己写的代码
+                    this.fullName = val + '-' + this.lastName  
+                }, 1000);
+                
+            },
+            lastName(val){
+                this.fullName = this.firstName + '-' + val
+            }
+        }   
+            
+           
+        })
+    </script>
+</html>

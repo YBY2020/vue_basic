@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>基本列表</title>
+        <!--引入Vue-->
+            <script type="text/javascript" src="../js/vue.js"></script>
+    </head>
+    <body>
+        <!--准备好一个容器
+        v-for指令用于展示列表数据
+        -->
+        <div id="root"> 
+            <h2>人员列表</h2>
+          <ul>
+              <!-- 遍历数组 -->
+              <li v-for="p in persons" :key="p.id"><!-- key让每一个li都有一个标识 在Vue和react当中使用遍历去生成多个同样结构的数据，必须给每一个结构起一个名字（打标识）-->
+                {{p.name}}-{{p.age}}<!-- 插值语法中可以用vue中定义的属性，或者没定义的计算属性，或者来自于形参，这里的p就是形参 -->
+              </li>
+              <!-- 遍历对象 -->
+              <li v-for="(value,k) of car" :key="k"><!-- of是历史遗留问题，能用但尽量不要用 -->
+                  {{k}}---{{value}}
+              </li>
+              <!-- 遍历字符串(用的少) -->
+              <li v-for="(char,index) of str" :key="index"><!-- index作为key是有问题的 -->
+                {{index}}---{{char}}
+            </li>
+            <!-- 遍历指定次数(用的少) -->
+            <li v-for="(number,index) of 5" :key="index"><!-- index作为key是有问题的 -->
+                {{index}}---{{number}}
+            </li>
+          </ul>
+        </div>
+     </body>
+
+   <script type="text/javascript">
+        Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+            new Vue({
+                el:'#root',
+                data:{
+                    persons:[//如果对顺序有要求就用数组
+                        {id:'001',name:'张三',age:18},
+                        {id:'002',name:'李四',age:19},
+                        {id:'003',name:'王五',age:20},
+                    ],
+                    car:{
+                        name:'奥迪',
+                        price:'70万',
+                        color:'黑色'
+                    },
+                    str:'hello'
+                }
+            })
+    </script>
+</html>

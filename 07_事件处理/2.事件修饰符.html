@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>事件修饰符</title>
+        <!--引入Vue-->
+            <script type="text/javascript" src="../js/vue.js"></script>
+        <style>
+            *{
+                margin-top: 20px;
+            }/* 通配符，所有元素之间都有20px的间距 */
+            .demo1{
+                height: 50px;
+                background-color: skyblue;
+            }
+            .box1{
+                padding:5px;/* 加这个周围就有缝隙了 */
+                background-color: skyblue;
+            }
+            .box2{
+                padding:5px;/* 加这个周围就有缝隙了 */
+                background-color: orange;
+            }
+            .list{
+                width: 200px;/* 敲w2可以自动关联出width: 2px; */
+                height: 200px;
+                background-color: peru;
+                overflow: auto;/* 可以形成滚动条，这样子元素不会溢出了 */
+            }
+            li{
+                height: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--
+            Vue中的事件修饰符：
+            1.prevent 阻止默认事件（常用）
+            2.stop  阻止事件冒泡（常用）
+            3.once  事件只触发一次（常用）
+            4.capture  使用事件的捕获模式
+            5.self  只有event.target是当前操作的元素时才是触发事件
+            6.passive  事件的默认行为立即执行，无需等待事件回调执行完毕
+
+            修饰符可以连着用@click.stop.prevent既可以阻止冒泡也可以阻止默认事件，跟先后顺序有关系
+        -->
+        <!--准备好一个容器-->
+        <div id="root"> 
+          <h2>欢迎来到{{name}}学习</h2>  
+          <!-- 阻止默认事件（常用） 这里的默认事件指的是跳转网页而不是点我提示信息那个-->
+          <a href="http://www.atguigu.com" @click.prevent="showInfo">点我提示信息</a>
+
+          <!-- 阻止事件冒泡（常用） -->
+          <div class="demo1" @click="showInfo"><!-- 这里也有个@click="showInfo，典型的事件冒泡（即多个组件嵌套，触发内层组件时，会一一触发外层组件 -->
+            <button  @click.stop="showInfo">点我提示信息</button>
+          </div>
+
+          <!-- 事件只触发一次 -->
+          <button  @click.once="showInfo">点我提示信息</button>
+
+          <!-- 使用事件的捕获模式 
+            如果不加修饰符，这又是一个冒泡事件，而事实上冒泡事件是基于事件捕获之上的，先有事件捕获（从外向内），再有冒泡（从内向外）
+            ，但是事件捕获阶段是不做处理的，所以显示21
+            加了事件捕获，就按原本的轨迹，显示12
+            -->
+          <div class="box1" @click.capture="showMsg(1)">
+              div1
+              <div class="box2" @click="showMsg(2)">
+                  div2
+              </div>
+          </div>
+
+          <!-- 只有event.target是当前操作的元素时才是触发事件
+            这里也体现在阻止冒泡，不过那个e.target为什么总是button不理解
+          -->
+          <div class="demo1" @click.self="showInfo">
+            <button  @click="showInfo">点我提示信息</button>
+          </div>
+
+          <!-- 事件的默认行为立即执行，无需等待事件回调执行完毕 -->
+          <ul @wheel.passive="demo" class="list"><!-- @scroll是给滚动条绑定的事件="demo"这是事件会发生的方法 如果用wheel是绑定鼠标滚轮 -->
+              <li>1</li>
+              <li>2</li>
+              <li>3</li>
+              <li>4</li>
+          </ul>
+
+        </div>
+     </body>
+
+   <script type="text/javascript">
+        Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+            new Vue({
+                el:'#root',
+                data:{
+                    name:'尚硅谷'
+                },
+                methods:{
+                    showInfo(e){//e代表event
+                        //e.preventDefault()//阻止默认行为（跳转网站）可以直接写在@click后面 事件修饰符
+                        //e.stopPropagation()//阻止事件冒泡
+                        //alert('同学你好')
+                        console.log(e.target)
+                    },
+                    showMsg(msg){                    
+                        console.log(msg)
+                    },
+                    demo(){
+                        //console.log('@')
+                        for (let i = 0; i < 100000; i++) {
+                            console.log('#')                          
+                        }
+                        console.log('累坏了')//如果我绑定的是wheel事件，那么我滚动一下滚轮，要做完以上的事情才会让滚动条动一下
+                    }
+                }
+            })
+    </script>
+</html>

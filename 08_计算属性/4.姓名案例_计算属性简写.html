@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>姓名案例_计算属性简写</title>
+        <!--引入Vue-->
+            <script type="text/javascript" src="../js/vue.js"></script>
+    </head>
+    <body>
+        <!--准备好一个容器
+        一个小技巧：写属性的时候往下面看一眼，想想你要的数据是什么，就不会出错了
+        -->
+        <div id="root"> 
+         姓：<input type="text" v-model="firstName"><!-- value是给input框设置初始值，区分提示信息 v-model:value简写为v-model--><br/><br/>
+         名：<input type="text" v-model="lastName"><br/><br/>
+         全名：<span>{{fullName}}</span><!-- fullName是计算属性，计算属性也是属性，直接插值语法引用就行 -->
+        </div>
+     </body>
+
+   <script type="text/javascript">
+        Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+        new Vue({
+            el:'#root',
+            data:{
+                firstName:'张',
+                lastName:'三'
+            },
+            /* 完整写法
+            computed:{
+                fullName:{ 
+                    //确定了只读不改，那就可以简写 
+                    get(){    
+                        return this.firstName + '-' + this.lastName
+                    },
+                }
+            } */
+            fullName(){
+                return this.firstName + '-' + this.lastName//fullName就当get用，但实际上是完整写法的作用
+            }
+           
+        })
+    </script>
+</html>
