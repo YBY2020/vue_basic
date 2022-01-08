@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>列表过滤</title>
+        <!--引入Vue-->
+            <script type="text/javascript" src="../js/vue.js"></script>
+    </head>
+    <body>
+        <!--准备好一个容器
+        v-for指令用于展示列表数据
+        -->
+        <div id="root"> 
+            <h2>人员列表</h2>
+            <input type="text" placeholder="请输入名字" v-model="keyWord"><!-- 模糊搜索 keyWord就是输入的东西-->
+          <ul>
+              <!-- 遍历数组 -->
+              <li v-for="(p,index) of filPersons"  :key="index">
+                {{p.name}}-{{p.age}}--{{p.sex}}
+              </li>
+             
+          </ul>
+        </div>
+     </body>
+
+   <script type="text/javascript">
+        Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+            //用watch实现
+            //#region （强制折叠）
+            /* new Vue({
+                el:'#root',
+                data:{
+                    keyWord:'',//keyWord要事先定义
+                    persons:[//如果对顺序有要求就用数组
+                        {id:'001',name:'马冬梅',age:19,sex:'女'},
+                        {id:'002',name:'周冬雨',age:20,sex:'女'},
+                        {id:'003',name:'周杰伦',age:21,sex:'男'},
+                        {id:'004',name:'温兆伦',age:22,sex:'男'},
+                    ],
+                    filPersons:[]//过滤后的数组                   
+                },
+                watch:{
+                    keyWord:{
+                        immediate:true,//一开始就用空字符串比对，页面上会出现所有待选元素
+                        handler(val){
+                            this.filPersons = this.persons.filter((p)=>{
+                                return p.name.indexOf(val) !== -1//返回数组中包含字符串的元素（注意数组中的每个元素都包含一个空字符串，在0的位置）
+                            })
+                        }
+                    }
+                }
+            }) */
+            //#endregion
+            //用computed实现
+
+            //明显computed实现要比watch简单些，所以优先选用computed
+            new Vue({
+                el:'#root',
+                data:{
+                    keyWord:'',//keyWord要事先定义
+                    persons:[//如果对顺序有要求就用数组
+                        {id:'001',name:'马冬梅',age:19,sex:'女'},
+                        {id:'002',name:'周冬雨',age:20,sex:'女'},
+                        {id:'003',name:'周杰伦',age:21,sex:'男'},
+                        {id:'004',name:'温兆伦',age:22,sex:'男'},
+                    ], 
+                },
+                computed:{
+                        filPersons(){
+                             return this.persons.filter((p)=>{
+                                return p.name.indexOf(this.keyWord) !== -1
+                            }) 
+                        }
+                    },//不能配置在data里面
+            })
+    </script>
+</html>
