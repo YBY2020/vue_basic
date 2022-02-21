@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>localStorage</title>
+	</head>
+	<body>
+		<!-- localStorage最大的特点就是关闭浏览器也会留存数据 除非清缓存或者用户亲自去删或者借助api 要记牢这些原生api -->
+		<h2>localStorage</h2>
+		<button onclick="saveData()">点我保存一个数据</button><!-- onclick是原生js里绑定东西用的 -->
+		<button onclick="readData()">点我读取一个数据</button>
+		<button onclick="deleteData()">点我删除一个数据</button>
+		<button onclick="deleteAllData()">点我清空一个数据</button>
+
+		<script type="text/javascript" >
+			let p = {name:'张三',age:18}
+
+			function saveData(){//原生js
+				localStorage.setItem('msg','hello!!!')
+				localStorage.setItem('msg2',666)//666即使不是字符串，也会自动调用toString变成字符串
+				localStorage.setItem('person',JSON.stringify(p))//JSON.stringify能把一个对象变成字符串的形式并且能看出里面的内容
+			}
+			function readData(){//你要先存再读，不然就都是null
+				console.log(localStorage.getItem('msg'))
+				console.log(localStorage.getItem('msg2'))
+
+				const result = localStorage.getItem('person')
+				console.log(JSON.parse(result))//JSON.parse解析一下result
+
+				// console.log(localStorage.getItem('msg3'))
+			}
+			function deleteData(){
+				localStorage.removeItem('msg2')//注意不是deleteItem
+			}
+			function deleteAllData(){
+				localStorage.clear()//clear清空
+			}
+		</script>
+	</body>
+</html>
