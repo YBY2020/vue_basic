@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>v-cloak指令</title>
+		<style>
+			[v-cloak]{/* 属性选择器 */
+				display:none;/* 选中所有带v-cloak的标签让他们不显示 所以说一定要配合css使用*/
+			}
+		</style>
+		<!-- 引入Vue -->
+	</head>
+	<body>
+		<!-- 
+				v-cloak指令（没有值）：
+						1.本质是一个特殊属性，Vue实例创建完毕并接管容器后，会删掉v-cloak属性。
+						2.使用css配合v-cloak可以解决网速慢时页面展示出{{xxx}}的问题。
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2 v-cloak>{{name}}</h2><!-- 如果没有v-clock，没有解析的模板就会出现在页面上 -->
+		</div>
+		<!-- 让外部js等了5秒才请求回来 在此期间无法渲染页面和进行脚本 所以把这行写在页面div下面-->
+		<!-- 在body的最下方也可以引用外部js -->
+		<script type="text/javascript" src="http://localhost:8080/resource/5s/vue.js"></script>
+	</body>
+	
+	<script type="text/javascript">
+		console.log(1)
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷'
+			}
+		})
+	</script>
+</html>

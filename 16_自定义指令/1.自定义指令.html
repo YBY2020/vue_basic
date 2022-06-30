@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>自定义指令</title>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 	自定义指令就是名字是自己定的，背后操作DOM的细节也是自己写的，所以是要亲自操作DOM了，其实就是把原生操作DOM指令进行了一次封装
+
+				需求1：定义一个v-big指令，和v-text功能类似，但会把绑定的数值放大10倍。
+				需求2：定义一个v-fbind指令，和v-bind功能类似，但可以让其所绑定的input元素默认获取焦点。f取focus首字母
+				自定义指令总结：
+						一、定义语法：
+									(1).局部指令：
+												new Vue({															new Vue({
+													directives:{指令名:配置对象}   或   		directives{指令名:回调函数}
+												}) 																		})
+									(2).全局指令：
+													Vue.directive(指令名,配置对象) 或   Vue.directive(指令名,回调函数)
+
+						二、配置对象中常用的3个回调：
+									(1).bind：指令与元素成功绑定时调用。
+									(2).inserted：指令所在元素被插入页面时调用。
+									(3).update：指令所在模板结构被重新解析时调用。
+
+						三、备注：
+									1.指令定义时不加v-，但使用时要加v-；
+									2.指令名如果是多个单词，要使用kebab-case命名方式，不要用camelCase(驼峰命名)命名。
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2>{{name}}</h2>
+			<h2>当前的n值是：<span v-text="n"></span> </h2><!-- 指令是不能脱离元素存在的 -->
+			<!-- <h2>放大10倍后的n值是：<span v-big-number="n"></span> </h2> --> <!-- 如果出现两个单词连在一起必须分隔 -->
+			<h2>放大10倍后的n值是：<span v-big="n"></span> </h2>
+			<button @click="n++">点我n+1</button>
+			<hr/><!-- 分割线 -->
+			<input type="text" v-fbind:value="n">
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+		Vue.config.productionTip = false
+
+		//定义全局指令
+		/* Vue.directive('fbind',{
+			//指令与元素成功绑定时（一上来）
+			bind(element,binding){
+				element.value = binding.value
+			},
+			//指令所在元素被插入页面时
+			inserted(element,binding){
+				element.focus()
+			},
+			//指令所在的模板被重新解析时
+			update(element,binding){
+				element.value = binding.value
+			}
+		}) */
+
+		new Vue({
+			el:'#root',
+			data:{
+				name:'尚硅谷',
+				n:1
+			},
+			directives:{//directive有指令的意思 这里都是局部指令，不能被其他vm使用
+				//big函数何时会被调用？1.指令与元素成功绑定时（一上来）。2.指令所在的模板被重新解析时。
+				/* 'big-number'(element,binding){加分隔 必须加引号
+					// console.log('big')
+					element.innerText = binding.value * 10
+				}, */
+				big(element,binding){/* 直接定义big不是v-big  直接写成一个函数，就很简单，但是不能处理一些细节上的问题
+					big输出不靠返回值，靠的是传进来的参数，element是一个真实的DOM元素，就是那个span*/
+					console.log('big',this) //注意此处的this是window
+					// console.log('big')
+					element.innerText = binding.value * 10
+				},
+				fbind:{/* 对象形式 必须写成对象形式才能处理时间节点这种细节*/
+					//指令与元素成功绑定时（一上来）
+					bind(element,binding){//element是一个真实的DOM元素，binding把元素和指令进行一次绑定
+						element.value = binding.value
+					},
+					//指令所在元素被插入页面时(如果是一上来就focus会没有效果)
+					inserted(element,binding){
+						element.focus()
+					},
+					//指令所在的模板被重新解析时
+					update(element,binding){
+						element.value = binding.value//往往update和bind的逻辑是重复的，所以写成函数形式就是只写了bind和update，没有写inserted
+					}
+				}
+			}
+		})
+		
+	</script>
+</html>

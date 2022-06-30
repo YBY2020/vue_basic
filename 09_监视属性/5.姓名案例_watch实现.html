@@ -37,7 +37,7 @@
         watch:{
             firstName(val){//val是newValue的简写形式，嫌麻烦可以这样写
                 //计时器一定要写成箭头函数
-                setTimeout(() => {//定时器，让他等一秒钟再执行（异步任务）computed不能开启异步任务，因为它完全靠return获得结果，如果你加了计时器就return计时器了，而这里是靠我们自己写的代码
+                setTimeout(() => {//定时器，让他等一秒钟再执行（异步任务）computed不能开启异步任务，因为它完全靠return获得结果(意思是不能在return外面包裹定时器)，如果你加了计时器就return计时器了，而这里是靠我们自己写的代码
                     this.fullName = val + '-' + this.lastName  
                 }, 1000);
                 

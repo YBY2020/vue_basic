@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>基本使用</title>
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 
+			传统方式编写应用存在的问题：
+			1.依赖关系混乱，不好维护
+			2.代码复用率不高（区分复制和复用）
+
+			组件体现了封装的理念
+			组件的定义：实现应用中局部功能 代码和资源的集合
+
+			区分组件和模块化：模块化指的是js的模块化
+
+			非单文件（html文件）组件：一个文件中包含有n个组件 样式不能跟着组件走！！！（弊病）
+			单文件（vue文件）组件：一个文件中只包含1个组件 (用vue开发一般都用单文件组件)
+
+			Vue中使用组件的三大步骤：
+					一、定义组件(创建组件)
+					二、注册组件
+					三、使用组件(写组件标签)
+
+			一、如何定义一个组件？
+						使用Vue.extend(options)创建，其中options和new Vue(options)时传入的那个options几乎一样，但也有点区别；
+						区别如下：
+								1.el不要写，为什么？ ——— 最终所有的组件都要经过一个vm的管理，由vm中的el决定服务哪个容器。
+								2.data必须写成函数，为什么？ ———— 避免组件被复用时，数据存在引用关系。
+						备注：使用template可以配置组件结构。
+
+			二、如何注册组件？
+							1.局部注册：靠new Vue的时候传入components选项
+							2.全局注册：靠Vue.component('组件名',组件)
+
+			三、编写组件标签：
+							<school></school>
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<hello></hello>
+			<hr>
+			<h1>{{msg}}</h1>
+			<hr>
+			<!-- 第三步：编写组件标签 -->
+			<school></school><!-- 一个组件如果被使用多次，它里面地数据是不会被相互干扰的 -->
+			<hr>
+			<!-- 第三步：编写组件标签 -->
+			<student></student>
+
+		<div id="root2">
+			<hello></hello><!-- 复用模板特别简单，就是把这个标签再写一遍 -->
+		</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false
+
+		//第一步：创建school组件
+		const school = Vue.extend({//一个特别重要的api .extend
+			//非单文件组件就是这样，标签写进去没有高亮，这也是我们为什么用单文件组件的原因
+			template:`
+				<div class="demo">
+					<h2>学校名称：{{schoolName}}</h2>
+					<h2>学校地址：{{address}}</h2>
+					<button @click="showName">点我提示学校名</button>	
+				</div>
+			`,//用这个符号可以随意地换行，注意了组件里面必须包裹着一个div，不然就是多个小模块会出错
+			// el:'#root', //组件定义时，一定不要写el配置项，因为最终所有的组件都要被一个vm管理，由vm决定服务于哪个容器。
+			//组件就是一块砖，哪里需要哪里搬，不是特定为谁服务，最终听vm的
+			data(){//data要写成函数式 用return返回数据 这样其他人要调用这些数据，修改也互不影响（因为函数给两个人返回对象，虽然对象的属性名和属性值一样但地址不一样，所以改动一个另一个才不会变）
+				return {
+					schoolName:'尚硅谷',
+					address:'北京昌平'
+				}
+			},
+			methods: {
+				showName(){
+					alert(this.schoolName)
+				}
+			},
+		})
+
+		//第一步：创建student组件
+		const student = Vue.extend({
+			template:`
+				<div>
+					<h2>学生姓名：{{studentName}}</h2>
+					<h2>学生年龄：{{age}}</h2>
+				</div>
+			`,
+			data(){
+				return {
+					studentName:'张三',
+					age:18
+				}
+			}
+		})
+		
+		//第一步：创建hello组件
+		const hello = Vue.extend({
+			template:`
+				<div>	
+					<h2>你好啊！{{name}}</h2>
+				</div>
+			`,
+			data(){
+				return {
+					name:'Tom'
+				}
+			}
+		})
+		
+		//第二步：全局注册组件 所有的vm都能用这个组件
+		Vue.component('hello',hello)//''里的是组件名字，第二个是组件在哪，也就是你定义的时候写了什么 
+
+		//创建vm
+		new Vue({
+			el:'#root',//必须写el
+			data:{
+				msg:'你好啊！'
+			},
+			//第二步：注册组件（局部注册）局部注册用得多
+			components:{//把这个单词记住（组件）
+				school,//组件同名可以简写 反例xuexiao:school 最好是要同名 组件的名字真正是由xuexiao决定的
+				student
+			}
+		})
+
+		new Vue({
+			el:'#root2',//时刻注意一个vm只能管理一个root
+		})
+	</script>
+</html>

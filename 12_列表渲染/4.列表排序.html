@@ -18,7 +18,7 @@
             <button @click="sortType = 0">原顺序</button>
           <ul>
               <!-- 遍历数组 -->
-              <li v-for="(p,index) of filPersons"  :key="index">
+              <li v-for="(p,index) of filPersons"  :key="p.id">
                 {{p.name}}-{{p.age}}--{{p.sex}}
               </li>
              

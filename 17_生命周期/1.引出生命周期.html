@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>引出生命周期</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 
+				生命周期：  
+						1.又名：生命周期回调函数、生命周期函数、生命周期钩子（到了合适的生命周期vue会把这个函数钩出来）。
+						2.是什么：Vue在关键时刻帮我们调用的一些特殊名称的函数。
+						3.生命周期函数的名字不可更改，但函数的具体内容是程序员根据需求编写的。
+						4.生命周期函数中的this指向是vm 或 组件实例对象。
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2 v-if="a">你好啊</h2>
+			<h2 :style="{opacity}">欢迎学习Vue</h2><!-- opacity是控制透明度，不能写死，变化的数据就交给vue {opacity：opacity}重名用对象的简写形式-->
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+		
+		 new Vue({
+			el:'#root',
+			data:{
+				a:false,
+				opacity:1
+			},
+			methods: {
+				/* change(){
+					etInterval(() => {
+					vm.opacity -= 0.01//每隔16毫秒，透明度-0.01，直到<=0，又变回1
+					if(vm.opacity <= 0) vm.opacity = 1
+					},16) 
+				} *///这样写除非你再增添一个按钮绑定这个方法事件，不能完成一上来就变化的需求，或者把change当成模板里的插值语法亲自去调，这样会陷入死循环，页面数据一改变就重新解析模板就又开一个定时器
+			},
+
+			//Vue完成模板的解析并把初始的真实DOM元素放入页面后（挂载完毕）调用mounted 这个时间点开定时器时期最佳 只开一次就行 关键的时刻调关键的函数 
+			mounted(){//mounted意思是挂载完毕   第一次放进DOM叫挂载，以后就叫更新了
+				console.log('mounted',this)
+				setInterval(() => {
+					this.opacity -= 0.01
+					if(this.opacity <= 0) this.opacity = 1
+				},16)
+			},
+		})
+
+		//通过外部的定时器实现（不推荐） 最好在vue内部解决，不要接受vm这个中转，写在vue外面的都要是全局的设置才好
+		/* setInterval(() => {
+			vm.opacity -= 0.01//每隔16毫秒，透明度-0.01，直到<=0，又变回1
+			if(vm.opacity <= 0) vm.opacity = 1
+		},16) */
+	</script>
+</html>

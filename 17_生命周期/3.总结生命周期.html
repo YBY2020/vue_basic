@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>引出生命周期</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 
+				一共8个4对生命周期钩子
+				常用的生命周期钩子：
+						1.mounted: 发送ajax请求、启动定时器、绑定自定义事件、订阅消息等【初始化操作】。
+						2.beforeDestroy: 清除定时器、解绑自定义事件、取消订阅消息等【收尾工作】。
+
+				关于销毁Vue实例
+						1.销毁后借助Vue开发者工具看不到任何信息。
+						2.销毁后自定义事件会失效，但原生DOM事件（如click）依然有效。
+						3.一般不会在beforeDestroy操作数据，因为即便操作数据，也不会再触发更新流程了。
+		-->
+		<!-- 准备好一个容器-->
+		<div id="root">
+			<h2 :style="{opacity}">欢迎学习Vue</h2>
+			<button @click="opacity = 1">透明度设置为1</button>
+			<button @click="stop">点我停止变换</button>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+		 new Vue({
+			el:'#root',
+			data:{
+				opacity:1
+			},
+			methods: {
+				stop(){
+					this.$destroy()//这个相当于vm自己了结，很少用，一般是他杀，点击停止变换，就destroy，跳到beforedestory就能清掉定时器
+					//如果在这里写清除定时器，那么如果是他杀就不会走这一步，定时器依然会在工作，只是页面上不起效果了而已
+				}
+			},
+			//Vue完成模板的解析并把初始的真实DOM元素放入页面后（挂载完毕）调用mounted
+			mounted(){//挂载完毕对应着人的出生 做点初始化的事，也就是那种一上来就要做的事
+				console.log('mounted',this)
+				this.timer = setInterval(() => {//this.timer 就是this.id的意思，拿到这个定时器的id好去销毁
+					console.log('setInterval')
+					this.opacity -= 0.01
+					if(this.opacity <= 0) this.opacity = 1
+				},16)
+			},
+			beforeDestroy() {//做点收尾工作 只要走到这一步就清理掉定时器和数据 不管是怎么走到的
+				clearInterval(this.timer)//清理定时器，在这里清理就清得很暴力
+				console.log('vm即将驾鹤西游了')
+			},
+		})
+
+	</script>
+</html>

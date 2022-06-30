@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>分析生命周期</title>
+		<!-- 引入Vue -->
+		<script type="text/javascript" src="../js/vue.js"></script>
+	</head>
+	<body>
+		<!-- 准备好一个容器-->
+		<div id="root" :x="n">
+			<h2 v-text="n"></h2>
+			<h2>当前的n值是：{{n}}</h2>
+			<button @click="add">点我n+1</button><!-- 销毁vm之后虽然页面不再更新了但是点击button依然会调用add，因为只会解绑自定义事件，原生事件不会解绑 -->
+			<button @click="bye">点我销毁vm</button>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+		new Vue({
+			el:'#root',
+			// template:`
+			// 	<div>
+			// 		<h2>当前的n值是：{{n}}</h2>
+			// 		<button @click="add">点我n+1</button>
+			// 	</div>
+			// `,//还能这样写，vue直接编译模板，会替换掉上面的div
+			data:{
+				n:1
+			},
+			methods: {
+				add(){
+					console.log('add')
+					this.n++
+				},
+				bye(){//调用了这个api会走到beforedestroy和destroyed那一步生命周期
+					console.log('bye')
+					this.$destroy()//vm没了但是它的工作成果还在，所以页面上不会更新到原始值（实例方法/生命周期）
+				}
+			},
+			watch:{
+				n(){
+					console.log('n变了')
+				}
+			},
+			//生命周期的本质就是一堆函数等着vue去调
+			beforeCreate() {//在数据代理和数据监测创建之前，不是vm创建之前
+				console.log('beforeCreate')
+				console.log(this)//此时无法通过vm访问到data中的数据，methods中的方法
+				debugger;//卡一个断点，标准的调试方式，只想调试到这就让代码的执行停到这 分号不写也可以
+			},
+			created() {
+				console.log('created')
+			},
+			beforeMount() {//挂载之前，此时页面呈现的是未经挂载的DOM结构 在这个函数里面无论对DOM进行什么操作最终都不奏效，注意最终，不懂去听课
+				console.log('beforeMount')
+			},
+			mounted() {//mounted不是在单打独斗而是一群兄弟姐妹陪着 从这里到以上都是挂载流程
+				console.log('mounted')
+			},
+			beforeUpdate() {//如果点击按钮更新，就会跳到这个函数beforeUpdate和下面的updated
+				console.log('beforeUpdate')
+			},
+			updated() {
+				console.log('updated')
+			},
+			beforeDestroy() {//只要到这一步，你能访问到方法和数据，但所作的修改不会对页面产生更新，意思是到这一步就进行点收尾工作得了
+				console.log('beforeDestroy')//此时数据是新的，页面是旧的，尚未保持同步
+			},
+			destroyed() {//这个钩子没什么用
+				console.log('destroyed')//此时数据是新的，页面也是新的
+			},
+		})
+	</script>
+</html>

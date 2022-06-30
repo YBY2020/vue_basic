@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Vue.set的使用</title>
+        <!--引入Vue-->
+            <script type="text/javascript" src="../js/vue.js"></script>
+    </head>
+    <body>
+        <!--准备好一个容器-->
+        <div id="root"> 
+        <h2>姓名：{{student.name}}</h2>
+        <h2>年龄：{{student.age}}</h2>
+        <h2 v-if="student.sex">性别：{{student.sex}}</h2>
+          <button @click="addSex">添加一个性别属性，默认值是男</button> 
+        </div>
+     </body>
+
+   <script type="text/javascript">
+        Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+
+            const vm = new Vue({
+                el:'#root',
+                data:{
+                    
+                    student:{
+                        name:'Tom',
+                        age:'14'
+                    }
+                },
+                methods: {
+                    addSex(){
+                        //Vue.set(this.student,'sex','男')
+                        this.$set(this.student,'sex','男')//两种写法都可以，注意无法向data里面添加属性，必须是一个对象里
+
+                    }
+                },
+            })
+    </script>
+</html>

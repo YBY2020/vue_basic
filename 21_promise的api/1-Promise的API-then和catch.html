@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise API</title>
+</head>
+<body>
+    <script>
+
+
+        //上面判断promise对象是否失败
+
+        //Promise的构造函数   使用它new一个promise实例对象
+        let p = new Promise((resolve, reject) => {//new的参数是一个箭头函数(也可以用匿名函数)【这整个函数被称为执行器函数  是同步调用的】   函数里面是两个形参resolve和reject  成功调resolve 失败调reject
+            // ** 同步调用【会立即执行   不会进入到队列当中去】
+            // console.log(111);
+            //修改 promise 对象的状态
+            reject('error');//reject一调用就会变成失败  后续就会执行失败的回调
+        });
+
+
+
+        //下面指定promise对象成功或失败的结果
+
+        // console.log(222);
+        //【then方法是指定回调   函数里面也是两个形参resolve和reject  成功调onResolved(得到成功的 vlaue)     失败调 onRejected(得到失败的 reason)】
+        
+        //执行 catch 方法【catch与then一样也是用于指定回调，但他只能指定失败的回调】
+        p.catch(reason => {//【关于箭头函数你要记住一句话   =>后面是返回值  =>前面是参数，如果是()就说明没有参数或者需要多个参数   然后再前面就是函数名(有时会省略)】
+            console.log(reason);
+        });
+    </script>
+</body>
+</html>

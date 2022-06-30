@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise API - resolve</title>
+</head>
+<body>
+    <script>
+        //
+        let p1 = Promise.resolve(521);
+        //如果传入的参数为 非Promise类型的对象, 则【返回的结果为成功promise对象】
+
+         //【resove方法隶属于promise函数而不是实例对象   返回一个成功/失败的 promise 对象    他的作用就是为了快速得到一个promise对象   还能封装一个值，将之转换为promise对象】
+
+        //如果传入的参数为 Promise 对象, 则【参数的结果决定了 resolve 的结果】
+       
+        let p2 = Promise.resolve(new Promise((resolve, reject) => {
+            // resolve('OK');
+            reject('Error');
+        }));
+        // console.log(p2);
+        p2.catch(reason => {//在catch()里面传入一个失败的回调
+            console.log(reason);
+        })
+    </script>
+</body>
+</html>

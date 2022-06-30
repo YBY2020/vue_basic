@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise API - reject</title>
+</head>
+<body>
+    <script>
+        // let p = Promise.reject(521);   返回的一直是一个失败的promise对象  失败的结果是521
+        // let p2 = Promise.reject('iloveyou');
+        let p3 = Promise.reject(new Promise((resolve, reject) => {
+            resolve('OK');  //即便传入的是一个成功的promise   返回的依然是一个失败的promise对象  失败的结果是传入的那个成功的promise对象
+        }));
+        
+        console.log(p3);
+    </script>
+</body>
+</html>
